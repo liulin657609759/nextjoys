@@ -1,7 +1,8 @@
 import { Layout, Menu, Breadcrumb } from 'antd';
 const { Header, Content, Footer } = Layout;
 // import style from './index.module.css'
-export default () => (
+export default function Home(){
+  return(
   <Layout style={{height: '100vh'}}>
     <style jsx>{`
         .logo {
@@ -59,3 +60,4 @@ export default () => (
     </Footer>
   </Layout>
 );
+}
