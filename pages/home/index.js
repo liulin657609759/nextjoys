@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { Layout, Dropdown, Space, Statistic, Badge, Menu, Popover, Button } from 'antd';
 const { Header, Content, Footer } = Layout;
 import { SmileTwoTone, DownOutlined } from '@ant-design/icons';
@@ -6,7 +6,34 @@ import Image from 'next/image'
 import PhoTable from '../component/PhoTable';
 import style from './index.module.css'
 export default function Home(){
-  const [start, setStart] = useState(false)
+  const [start, setStart] = useState(false);
+  const [showPic, setShowPic] = useState(true);
+  const [num, setNum] = useState(1);
+  const [timers, setTimers] = useState([]);
+  const saveCallBack = useRef();
+  const callBack = () => {
+    const random = (Math.random() * 10) | 0;
+    setNum(num + random);
+  };
+  useEffect(() => {
+    saveCallBack.current = callBack;
+    return () => {};
+  });
+  useEffect(() => {
+    if(start){
+      const tick = () => {
+        saveCallBack.current();
+      };
+      const timer = setInterval(tick, 2000);
+      timers.push(timer);
+      setTimers(timers);
+      setShowPic(!showPic)
+      console.log(timers);
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [num,start]);
   const menu = (
     <Menu
       items={[
@@ -107,7 +134,7 @@ export default function Home(){
           height: '100%',
         }}
       >
-        <PhoTable />
+        {showPic && <PhoTable />}
         <div className='button'>
           <button
             className={style.button}

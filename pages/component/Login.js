@@ -1,10 +1,40 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import Cookie from 'js-cookie'
+import Head from 'next/head'
+import MyContext from '../../lib/context'
+import { useRouter } from 'next/router'
+import { login } from '../../lib/auth'
+import Link from 'next/link'
+import { getUser } from '../../lib/user' // 登录
 import { Form, Input, Button, Checkbox, Radio, InputNumber } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 export default function Layout({ children }) {
     const [isLogin, setIsLogin] = useState(true);
+    const { isLoggedIn, setUser } = useContext(MyContext)
+    const router = useRouter()
+      // 登录
+    const signIn = async (values) => {
+      const reg = await login(values.name, values.pwd)
+          // 获取到token
+      if (reg.accessToken) {
+              // 拿到token 获取用户信息
+        const user = await getUser()
+        if (user) setUser(user)
+        router.push('/')
+      } else {
+        setErrors({ server: reg?.error?.message || 'Error from server' })
+      }
+    }
+  
+    useEffect(() => {
+      if (isLoggedIn) {
+        router.push('/home/dashboard')
+      }
+    }, [isLoggedIn])
+  
     const onFinish = (values) => {
+        signIn(values)
         console.log('Received values of form: ', values);
     };
     
