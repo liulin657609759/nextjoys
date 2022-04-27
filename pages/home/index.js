@@ -1,9 +1,12 @@
+import React, {useState} from 'react'
 import { Layout, Dropdown, Space, Statistic, Badge, Menu, Popover, Button } from 'antd';
 const { Header, Content, Footer } = Layout;
-import { UserOutlined, AppstoreOutlined, SettingOutlined, DownOutlined } from '@ant-design/icons';
+import { SmileTwoTone, DownOutlined } from '@ant-design/icons';
+import Image from 'next/image'
 import PhoTable from '../component/PhoTable';
 import style from './index.module.css'
 export default function Home(){
+  const [start, setStart] = useState(false)
   const menu = (
     <Menu
       items={[
@@ -47,14 +50,14 @@ export default function Home(){
             width: 120px;
             height: 31px;
             margin: 16px 24px 16px 0;
-            background: rgba(255, 255, 255, 0.2);
+            background: #1890ff;
         }
         .site-layout-background {
             background: #fff;
         }
         .button {
           width: 100%;
-          display: flex;
+          display: ${!start ? 'flex' : 'none'};
           padding: 20px;
           justify-content: center;
         }
@@ -64,18 +67,20 @@ export default function Home(){
         position: 'fixed',
         zIndex: 1,
         width: '100%',
-        padding: '0 30px'
+        padding: '0 30px',
+        background: '#fff'
       }}
     >
       <div className={style.headerContent}>
         <div className='logo' />
         <Statistic
-          // title="进度"
+          title="进度"
           value={0} 
           suffix="/ 10"
-          valueStyle={{
-            color: '#fff'
+          style={{
+            textAlign: 'center'
           }}
+          prefix={<SmileTwoTone />}
         />
         <Dropdown overlay={menu}>
           <a onClick={e => e.preventDefault()}>
@@ -104,7 +109,12 @@ export default function Home(){
       >
         <PhoTable />
         <div className='button'>
-          <button className={style.button}>开始！</button>
+          <button
+            className={style.button}
+            onClick={()=>{
+              setStart(true)
+            }}
+          >开始！</button>
         </div>
       </div>
     </Content>
@@ -117,12 +127,21 @@ export default function Home(){
     </Footer>
     <div className={style.fixed}>
     <Popover placement="topRight" content={content} title="Title">
-      <div style={{
-        width: '30px',
-        height: '30px'
-      }}>
-        <img src='https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic3.zhimg.com%2Fv2-e9b02556e56039f616ace2ec90fa4a7a_180x120.jpg&refer=http%3A%2F%2Fpic3.zhimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653566748&t=8ae75461f4add416ee80b50d6a9a0b3a'></img>
-        Hover me</div>
+      <div
+        style={{
+          opacity: '.7'
+        }}
+      >
+        <Image
+          alt='ll'
+          width={50}
+          height={50}
+          src={'/images/hover.png'}
+          style={{
+            opacity: '.7'
+          }}
+        />
+        </div>
     </Popover>
     </div>
   </Layout>

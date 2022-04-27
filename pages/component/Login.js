@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, Radio, InputNumber } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 export default function Layout({ children }) {
@@ -10,15 +10,15 @@ export default function Layout({ children }) {
     
     return (
         <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{
-            remember: true,
-        }}
-        onFinish={onFinish}
+            name="normal_login"
+            className="login-form"
+            initialValues={{
+                remember: true,
+            }}
+            onFinish={onFinish}
         >
         <Form.Item
-            name="username"
+            name="name"
             rules={[
             {
                 required: true,
@@ -29,7 +29,7 @@ export default function Layout({ children }) {
             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
         </Form.Item>
         <Form.Item
-            name="password"
+            name="pwd"
             rules={[
             {
                 required: true,
@@ -43,16 +43,35 @@ export default function Layout({ children }) {
             placeholder="Password"
             />
         </Form.Item>
-        <Form.Item>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
+        {!isLogin && <Form.Item
+            name="sex"
+            rules={[
+                {
+                    required: true,
+                    message: '请选择性别!',
+                },
+                ]}
+        >
+            <Radio.Group>
+            <Radio value="0">男</Radio>
+            <Radio value="1">女</Radio>
+            </Radio.Group>
+        </Form.Item>}
+        {!isLogin && <Form.Item>
+            <Form.Item
+                name="age"
+                noStyle
+                rules={[
+                    {
+                        required: true,
+                        message: '请填写年龄！!',
+                    },
+                    ]}
+            >
+            <InputNumber min={1} max={100} />
             </Form.Item>
-    
-            <a className="login-form-forgot" href="">
-            Forgot password
-            </a>
-        </Form.Item>
-    
+            <span className="ant-form-text"> 岁</span>
+        </Form.Item>}
         <Form.Item>
             <Button style={{width: '100%'}} type="primary" htmlType="submit" className="login-form-button">
             {isLogin ? 'Log in' : 'register' }
