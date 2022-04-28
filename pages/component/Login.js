@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, message } from 'react'
 import Cookie from 'js-cookie'
 import Head from 'next/head'
 import MyContext from '../../lib/context'
@@ -17,19 +17,21 @@ export default function Layout({ children }) {
     const signIn = async (values) => {
       const reg = await login(values.name, values.pwd)
           // 获取到token
+        console.log(123,reg);
       if (reg.accessToken) {
               // 拿到token 获取用户信息
         const user = await getUser()
         if (user) setUser(user)
         router.push('/')
       } else {
-        setErrors({ server: reg?.error?.message || 'Error from server' })
+        // message.warning('Error from server')
+        console.log(reg);
       }
     }
   
     useEffect(() => {
       if (isLoggedIn) {
-        router.push('/home/dashboard')
+        router.push('/home')
       }
     }, [isLoggedIn])
   

@@ -1,0 +1,9 @@
+.item{
+    width: 50%;
+    text-align: center;
+}
+.selectItem{
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-around;
+}

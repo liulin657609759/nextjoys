@@ -4,6 +4,7 @@ const { Header, Content, Footer } = Layout;
 import { SmileTwoTone, DownOutlined } from '@ant-design/icons';
 import Image from 'next/image'
 import PhoTable from '../component/PhoTable';
+import Selector from '../component/Selector';
 import style from './index.module.css'
 export default function Home(){
   const [start, setStart] = useState(false);
@@ -23,12 +24,11 @@ export default function Home(){
     if(start){
       const tick = () => {
         saveCallBack.current();
+        setShowPic(!showPic)
       };
       const timer = setInterval(tick, 2000);
       timers.push(timer);
       setTimers(timers);
-      setShowPic(!showPic)
-      console.log(timers);
       return () => {
         clearInterval(timer);
       };
@@ -135,6 +135,7 @@ export default function Home(){
         }}
       >
         {showPic && <PhoTable />}
+        {!showPic && <Selector />}
         <div className='button'>
           <button
             className={style.button}
