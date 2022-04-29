@@ -161,11 +161,7 @@ export default function Home(){
     </Footer>
     <div className={style.fixed}>
     <Popover placement="topRight" content={content} title="Title">
-      <div
-        style={{
-          opacity: '.7'
-        }}
-      >
+      <div>
         <Image
           alt='ll'
           width={50}
