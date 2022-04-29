@@ -9,7 +9,7 @@ import PhoTable from '../component/PhoTable';
 import Selector from '../component/Selector';
 import style from './index.module.css';
 import { logout } from '../../lib/auth'
-import { fetchTaskHistory } from '../api/index'
+import { fetchTaskHistory, fetchGameData } from '../api/index'
 export default function Home(){
   const { user, isLoggedIn, setUser } = useContext(MyContext)
   const [start, setStart] = useState(false);
@@ -34,7 +34,8 @@ export default function Home(){
   });
   useEffect(() => {
     const taskHistory = fetchTaskHistory();
-    // console.log(333,taskHistory);
+    const gameData = fetchGameData({level:1})
+    console.log(333,gameData);
     if(start){
       const tick = () => {
         saveCallBack.current();
@@ -50,31 +51,7 @@ export default function Home(){
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [num,start,isLoggedIn]);
   const menu = (
-    <Menu
-      // items={[
-      //   {
-      //     label: (
-      //       <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-      //         1st menu item
-      //       </a>
-      //     ),
-      //   },
-      //   {
-      //     label: (
-      //       <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-      //         2nd menu item (disabled)
-      //       </a>
-      //     ),
-      //     disabled: true,
-      //   },
-      //   {
-      //     danger: true,
-      //     label: '退出登陆',
-      //     onTitleClick: ()=>{console.log(123444);}
-      //   },
-      // ]}
-    >
-      <Menu.Item>菜单项一</Menu.Item>
+    <Menu>
       <Menu.Item
         key={2}
         danger={true}
