@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext, message } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Cookie from 'js-cookie'
 import Head from 'next/head'
 import MyContext from '../../lib/context'
 import { useRouter } from 'next/router'
-import { login } from '../../lib/auth'
+import { login, register } from '../../lib/auth'
 import Link from 'next/link'
 import { getUser } from '../../lib/user' // 登录
 import { Form, Input, Button, Checkbox, Radio, InputNumber } from 'antd';
@@ -13,18 +13,24 @@ export default function Layout({ children }) {
     const [isLogin, setIsLogin] = useState(true);
     const { isLoggedIn, setUser } = useContext(MyContext)
     const router = useRouter()
-      // 登录
+      // 登录注册
     const signIn = async (values) => {
-      const reg = await login(values.name, values.pwd)
+      const reg={}
+      if(isLogin){
+        reg = await login(values.name, values.pwd)
+      }else{
+        reg = await register(values);
+      }
+      
           // 获取到token
-        console.log(123,reg);
-      if (reg.accessToken) {
-              // 拿到token 获取用户信息
+      if (reg.msg.token) {
+        // 拿到token 获取用户信息
         const user = await getUser()
+        user = JSON.parse(user);
         if (user) setUser(user)
         router.push('/')
       } else {
-        // message.warning('Error from server')
+        message.warning(reg.msg)
         console.log(reg);
       }
     }
@@ -37,7 +43,6 @@ export default function Layout({ children }) {
   
     const onFinish = (values) => {
         signIn(values)
-        console.log('Received values of form: ', values);
     };
     
     return (

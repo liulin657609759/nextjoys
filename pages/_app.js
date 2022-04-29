@@ -2,6 +2,8 @@ import Head from 'next/head'
 import Cookie from 'js-cookie'
 import MyContext from '../lib/context'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import {Base64} from "js-base64";
 import '../styles/globals.css'
 import 'antd/dist/antd.css'
 
@@ -10,6 +12,7 @@ import { AppProps } from 'next/app'
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 	// 1. 创建 state ，保存用户信息
   const [user, setUser] = useState(null)
+  const router = useRouter()
 
   useEffect(() => {
 		// 2. 从 cookie 中获取 登录凭证
@@ -17,18 +20,21 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
     // 3. 如果有登录凭证， 发送请求给后端服务获取用户信息
     if (jwt) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      }).then(async (res) => {
-        if (!res.ok) {
-          Cookie.remove('jwt') // 如果请求user 失败， 清理 cookie ，这里可以根据请求的状态码来判断处理
-          setUser(null)
-        }
-        const user = await res.json()
+      // fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+      //   headers: {
+      //     Authorization: `Bearer ${jwt}`,
+      //   },
+      // }).then(async (res) => {
+      //   if (!res.ok) {
+      //     Cookie.remove('jwt') // 如果请求user 失败， 清理 cookie ，这里可以根据请求的状态码来判断处理
+      //     setUser(null)
+      //   }
+        let res = Base64.decode(jwt)
+        const user = JSON.parse(res);
         setUser(user)
-      })
+      // })
+    }else{
+      router.push('/')
     }
   }, [])
 
