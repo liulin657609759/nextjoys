@@ -9,10 +9,13 @@ const fetchTaskLast = () => GET(
 )
 
 // 获得关卡数据-/game/data
-const fetchGameData = (params) => GET(
-  '/api/game/data',
-  params
-)
+async function fetchGameData(params){
+  return GET(
+    '/api/game/data',
+    params
+  )
+}
+
 
 // 关卡数据上报-/game/push
 const fetchGamePush = (params) => POST(

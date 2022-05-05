@@ -19,6 +19,7 @@ export default function Home(){
   const [timers, setTimers] = useState([]);
   const [level, setLevel] = useState(1)
   const [result, setResult] = useState([])
+  const [gameData, setGameData] = useState([])
   const saveCallBack = useRef();
   const router = useRouter()
   const callBack = () => {
@@ -36,13 +37,19 @@ export default function Home(){
     return () => {};
   });
   useEffect(() => {
-    const taskHistory = fetchTaskHistory();
-    const key = md5({
+    const val = JSON.stringify({
       "level": level,
       "verification": "GET_MIX_256"
-    })
-
-    const gameData = fetchGameData({level:1,getKey: key})
+    });
+    const key = md5(val);
+    fetchGameData({level:1,getKey: key}).then(
+      
+    )
+    console.log(2222,data);
+  },[level]);
+  
+  useEffect(() => {
+    const taskHistory = fetchTaskHistory();
     // console.log(333,gameData);
     if(start && num <= 40){
       const tick = () => {
