@@ -2,25 +2,28 @@ import React, {useState, useEffect, useRef, useContext} from 'react'
 import { Layout, Dropdown, Space, Statistic, Badge, Menu, Popover, Button } from 'antd';
 const { Header, Content, Footer } = Layout;
 import { SmileTwoTone, DownOutlined } from '@ant-design/icons';
+import md5 from 'js-md5';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import MyContext from '../../lib/context';
 import PhoTable from '../component/PhoTable';
 import Selector from '../component/Selector';
 import style from './index.module.css';
-import { logout } from '../../lib/auth'
-import { fetchTaskHistory, fetchGameData } from '../api/index'
+import { logout } from '../../lib/auth';
+import { fetchTaskHistory, fetchGameData } from '../api/index';
 export default function Home(){
   const { user, isLoggedIn, setUser } = useContext(MyContext)
   const [start, setStart] = useState(false);
   const [showPic, setShowPic] = useState(true);
   const [num, setNum] = useState(1);
   const [timers, setTimers] = useState([]);
+  const [level, setLevel] = useState(1)
+  const [result, setResult] = useState([])
   const saveCallBack = useRef();
   const router = useRouter()
   const callBack = () => {
-    const random = (Math.random() * 10) | 0;
-    setNum(num + random);
+    setNum(num + 1);
+    console.log(123,num);
   };
   useEffect(() => {
     if (!isLoggedIn) {
@@ -34,14 +37,19 @@ export default function Home(){
   });
   useEffect(() => {
     const taskHistory = fetchTaskHistory();
-    const gameData = fetchGameData({level:1})
-    console.log(333,gameData);
-    if(start){
+    const key = md5({
+      "level": level,
+      "verification": "GET_MIX_256"
+    })
+
+    const gameData = fetchGameData({level:1,getKey: key})
+    // console.log(333,gameData);
+    if(start && num <= 40){
       const tick = () => {
         saveCallBack.current();
         setShowPic(!showPic)
       };
-      const timer = setInterval(tick, 2000);
+      const timer = setInterval(tick, !showPic ? 2000 : 500);
       timers.push(timer);
       setTimers(timers);
       return () => {
@@ -50,6 +58,10 @@ export default function Home(){
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [num,start,isLoggedIn]);
+
+  const selectRes = ({picRes, textRes})=>{
+
+  }
   const menu = (
     <Menu>
       <Menu.Item
@@ -108,8 +120,8 @@ export default function Home(){
         <div className='logo' />
         <Statistic
           title="进度"
-          value={0} 
-          suffix="/ 10"
+          value={Math.trunc(num/2)} 
+          suffix="/ 20"
           style={{
             textAlign: 'center'
           }}
@@ -141,7 +153,7 @@ export default function Home(){
         }}
       >
         {showPic && <PhoTable />}
-        {!showPic && <Selector />}
+        {!showPic && num>2 && <Selector />}
         <div className='button'>
           <button
             className={style.button}

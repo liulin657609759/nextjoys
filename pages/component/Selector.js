@@ -23,13 +23,6 @@ export default function PhoTable({ children }) {
                 <div className={style.selectItem}>
                     <Button
                         type="primary" 
-                        danger
-                        size={'large'}
-                        icon={<CloseOutlined />}
-                        onClick={()=>setResule(!result)}
-                    />
-                    <Button
-                        type="primary" 
                         danger={result} 
                         shape="circle" 
                         size={'large'}
@@ -41,7 +34,6 @@ export default function PhoTable({ children }) {
             <div className={style.item}>
                 <p>中间文字颜色一样吗？</p>
                 <div className={style.selectItem}>
-                    <Button type="primary" size='large' danger icon={<CloseOutlined />}/>
                     <Button type="primary" shape="circle" size='large' icon={<CheckOutlined />}/>
                 </div>
             </div>
