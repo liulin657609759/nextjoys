@@ -4,6 +4,7 @@ const { Header, Content, Footer } = Layout;
 import { SmileTwoTone, DownOutlined } from '@ant-design/icons';
 import md5 from 'js-md5';
 import Image from 'next/image';
+import { Base64 } from 'js-base64';
 import { useRouter } from 'next/router';
 import MyContext from '../../lib/context';
 import PhoTable from '../component/PhoTable';
@@ -24,7 +25,6 @@ export default function Home(){
   const router = useRouter()
   const callBack = () => {
     setNum(num + 1);
-    console.log(123,num);
   };
   useEffect(() => {
     if (!isLoggedIn) {
@@ -43,13 +43,16 @@ export default function Home(){
     });
     const key = md5(val);
     fetchGameData({level:1,getKey: key}).then(
-      
+      res=>{
+        const data = JSON.parse(Base64.decode(res.msg.data))
+        console.log(123,data);
+        setGameData(data)
+      }
     )
-    console.log(2222,data);
   },[level]);
   
   useEffect(() => {
-    const taskHistory = fetchTaskHistory();
+    // const taskHistory = fetchTaskHistory();
     // console.log(333,gameData);
     if(start && num <= 40){
       const tick = () => {
@@ -67,7 +70,11 @@ export default function Home(){
   }, [num,start,isLoggedIn]);
 
   const selectRes = ({picRes, textRes})=>{
+    result[Math.trunc(num/2)][colorJudge] = picRes
+    result[Math.trunc(num/2)][posJudge] = picRes
+    setResult(
 
+    )
   }
   const menu = (
     <Menu>
@@ -159,7 +166,7 @@ export default function Home(){
           height: '100%',
         }}
       >
-        {showPic && <PhoTable />}
+        {showPic && <PhoTable data={gameData[Math.trunc(num/2)]} />}
         {!showPic && num>2 && <Selector />}
         <div className='button'>
           <button

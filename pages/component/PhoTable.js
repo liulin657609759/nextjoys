@@ -1,9 +1,34 @@
 import React, {useState} from 'react'
+import Image from 'next/image';
 import { Form, Input, Button, Checkbox } from 'antd';
 
-export default function PhoTable({ children }) {
-    
-    
+export default function PhoTable({ data }) {
+    const lazyRoot = React.useRef(null)
+    console.log(222,data);
+    const contentRender = (index)=>{
+        if(data){
+            switch (index) {
+                case 4 :
+                    return (
+                        <span
+                            style={{
+                                fontSize: '40px',
+                                color: data.color
+                            }}
+                        >{data.word}</span>
+                    );
+                case data.pos :
+                    return (
+                        <Image lazyRoot={lazyRoot} width="100" height="100" src={data.imageUrl}  />
+                    );
+                default: 
+                    return null
+            }
+        }else{
+            return null
+        }
+        
+    }
     return (
         <div style={{
             display: 'flex',
@@ -30,9 +55,11 @@ export default function PhoTable({ children }) {
                     border: 4px solid #ccc;
                 }
             `}</style>
-            <ul className="flex">
+            <ul ref={lazyRoot} className="flex">
                 {new Array(9).fill(null).map((_,index)=>{
-                    return <li key={index}>{index===4 && '你好'}</li>
+                    return <li key={index}>
+                        {contentRender(index)}
+                        </li>
                 })}
             </ul>
         </div>
