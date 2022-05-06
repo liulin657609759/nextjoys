@@ -1,14 +1,17 @@
 import React, {useState} from 'react'
-import { Form, Input, Button, Checkbox } from 'antd';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
 import style from './css/Selector.module.css'
 
 
-export default function PhoTable({ children }) {
-    const [result,setResule] = useState(false);
+export default function PhoTable({ selectRes }) {
     
-    const btnStyle = {
+    const tyle = {
         background: 'red'
+    }
+    const btnStyle = {
+        width: '70px',
+        height: '70px',
     }
     return (
         <div style={{
@@ -19,22 +22,30 @@ export default function PhoTable({ children }) {
             height: '100%'
         }}>
             <div className={style.item}>
-                <p>图片的位置一样吗？</p>
+                <p className={style.p}>图片的位置一样吗？</p>
                 <div className={style.selectItem}>
                     <Button
+                        style={btnStyle}
                         type="primary" 
-                        danger={result} 
+                        // danger={result} 
                         shape="circle" 
                         size={'large'}
                         icon={<CheckOutlined />}
-                        onClick={()=>setResule(!result)}
+                        onClick={()=>selectRes('posJudge',true)}
                     />
                 </div>
             </div>
             <div className={style.item}>
-                <p>中间文字颜色一样吗？</p>
+                <p className={style.p}>中间文字颜色一样吗？</p>
                 <div className={style.selectItem}>
-                    <Button type="primary" shape="circle" size='large' icon={<CheckOutlined />}/>
+                    <Button
+                    style={btnStyle}
+                    type="primary"
+                    shape="circle"
+                    size='large'
+                    icon={<CheckOutlined />}
+                    onClick={()=>selectRes('colorJudge',true)}
+                    />
                 </div>
             </div>
         </div>

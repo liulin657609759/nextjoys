@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import MyContext from '../../lib/context';
 import PhoTable from '../component/PhoTable';
 import Selector from '../component/Selector';
+import NextBtn from '../component/NextBtn';
 import style from './index.module.css';
 import { logout } from '../../lib/auth';
 import { fetchTaskHistory, fetchGameData } from '../api/index';
@@ -16,10 +17,11 @@ export default function Home(){
   const { user, isLoggedIn, setUser } = useContext(MyContext)
   const [start, setStart] = useState(false);
   const [showPic, setShowPic] = useState(true);
-  const [num, setNum] = useState(1);
+  const [num, setNum] = useState(0);
+  const [result, setResult] = useState([]);
   const [timers, setTimers] = useState([]);
   const [level, setLevel] = useState(1)
-  const [result, setResult] = useState([])
+  const [resultObj, setResultObj] = useState({})
   const [gameData, setGameData] = useState([])
   const saveCallBack = useRef();
   const router = useRouter()
@@ -45,7 +47,6 @@ export default function Home(){
     fetchGameData({level:1,getKey: key}).then(
       res=>{
         const data = JSON.parse(Base64.decode(res.msg.data))
-        console.log(123,data);
         setGameData(data)
       }
     )
@@ -53,7 +54,11 @@ export default function Home(){
   
   useEffect(() => {
     // const taskHistory = fetchTaskHistory();
-    // console.log(333,gameData);
+    if(showPic && num>3){
+      result[Math.trunc(num/2)-2] = resultObj
+      setResultObj({});
+      console.log(123,result);
+    }
     if(start && num <= 40){
       const tick = () => {
         saveCallBack.current();
@@ -69,12 +74,8 @@ export default function Home(){
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [num,start,isLoggedIn]);
 
-  const selectRes = ({picRes, textRes})=>{
-    result[Math.trunc(num/2)][colorJudge] = picRes
-    result[Math.trunc(num/2)][posJudge] = picRes
-    setResult(
-
-    )
+  const selectRes = (type,val)=>{
+    resultObj[type] = val
   }
   const menu = (
     <Menu>
@@ -166,8 +167,9 @@ export default function Home(){
           height: '100%',
         }}
       >
-        {showPic && <PhoTable data={gameData[Math.trunc(num/2)]} />}
-        {!showPic && num>2 && <Selector />}
+        {/* {showPic && <PhoTable data={gameData[Math.trunc(num/2)]} />}
+        {!showPic && num>2 && <Selector selectRes={selectRes} />} */}
+        {showPic && <NextBtn selectRes={selectRes} />}
         <div className='button'>
           <button
             className={style.button}

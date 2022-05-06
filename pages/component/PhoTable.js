@@ -4,7 +4,6 @@ import { Form, Input, Button, Checkbox } from 'antd';
 
 export default function PhoTable({ data }) {
     const lazyRoot = React.useRef(null)
-    console.log(222,data);
     const contentRender = (index)=>{
         if(data){
             switch (index) {
