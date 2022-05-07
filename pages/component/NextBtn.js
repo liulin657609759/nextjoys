@@ -4,7 +4,7 @@ import { CheckOutlined } from '@ant-design/icons';
 import style from './css/NextBtn.module.css'
 
 
-export default function PhoTable({ selectRes }) {
+export default function PhoTable({ nextLevel }) {
     const btnStyle = {
         width: '70px',
         height: '70px',
@@ -12,14 +12,16 @@ export default function PhoTable({ selectRes }) {
     return (
         <div style={{
             display: 'flex',
-            justifyContent: 'center',
-            // alignItems: 'center',
-            paddingTop: '15%',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingTop: '25%',
             height: '100%'
         }}>
-            <div>您这一关的正确率为：89%</div>
+            <div className={style.text}>您这一关的正确率为：89%</div>
             <div>
-                <button className={style.button}>3D Button 1</button>
+                <button
+                    className={style.button}
+                >3D Button 1</button>
             </div>
         </div>
 

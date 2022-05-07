@@ -77,6 +77,11 @@ export default function Home(){
   const selectRes = (type,val)=>{
     resultObj[type] = val
   }
+
+  const nextLevel = val =>{
+    val && setLevel(level+1);
+    setNum(0);
+  }
   const menu = (
     <Menu>
       <Menu.Item
@@ -169,7 +174,7 @@ export default function Home(){
       >
         {/* {showPic && <PhoTable data={gameData[Math.trunc(num/2)]} />}
         {!showPic && num>2 && <Selector selectRes={selectRes} />} */}
-        {showPic && <NextBtn selectRes={selectRes} />}
+        {showPic && <NextBtn nextLevel={nextLevel} />}
         <div className='button'>
           <button
             className={style.button}

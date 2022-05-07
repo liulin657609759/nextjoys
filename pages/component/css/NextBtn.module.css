@@ -2,9 +2,10 @@
     position: relative;
     padding:  20px 40px;
     font-size: 1.4rem;
-    background-color: #00b3b4;
+    background-color: #1890ff;
     background-size: 46px 26px;
-    border: 1px solid #555;  
+    border: 2px solid rgb(249, 248, 248);  
+    border-radius: 15px;
     color: white;
     transition: all ease 0.3s;
   }
@@ -17,14 +18,18 @@
     content: "»";
     font-size: 1.2em;
     transition: all ease 0.3s;
-    opacity: 0;
+    opacity: 1;
   }
   
   .button:hover{
-    padding: 20px 60px 20px 20px;
+    padding: 20px 20px 20px 60px;
   }
   
   .button:hover::after{
-    right: 1.2em;
-    opacity: 1;
+    right: -1.2em;
+    opacity: 0;
   }
+  .text{
+    font-size: 30px;
+    margin-bottom: 20px;
+}
