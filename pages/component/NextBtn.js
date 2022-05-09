@@ -4,7 +4,7 @@ import { CheckOutlined } from '@ant-design/icons';
 import style from './css/NextBtn.module.css'
 
 
-export default function PhoTable({ nextLevel }) {
+export default function PhoTable({ rate, nextLevel }) {
     const btnStyle = {
         width: '70px',
         height: '70px',
@@ -17,10 +17,11 @@ export default function PhoTable({ nextLevel }) {
             paddingTop: '25%',
             height: '100%'
         }}>
-            <div className={style.text}>您这一关的正确率为：89%</div>
+            <div className={style.text}>您这一关的正确率为：{rate}</div>
             <div>
                 <button
                     className={style.button}
+                    onClick={()=>nextLevel(true)}
                 >3D Button 1</button>
             </div>
         </div>

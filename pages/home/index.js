@@ -12,7 +12,7 @@ import Selector from '../component/Selector';
 import NextBtn from '../component/NextBtn';
 import style from './index.module.css';
 import { logout } from '../../lib/auth';
-import { fetchTaskHistory, fetchGameData } from '../api/index';
+import { fetchTaskHistory, fetchGameData, fetchGamePush } from '../api/index';
 export default function Home(){
   const { user, isLoggedIn, setUser } = useContext(MyContext)
   const [start, setStart] = useState(false);
@@ -23,6 +23,7 @@ export default function Home(){
   const [level, setLevel] = useState(1)
   const [resultObj, setResultObj] = useState({})
   const [gameData, setGameData] = useState([])
+  const [rate, setRate] = useState('')
   const saveCallBack = useRef();
   const router = useRouter()
   const callBack = () => {
@@ -44,22 +45,46 @@ export default function Home(){
       "verification": "GET_MIX_256"
     });
     const key = md5(val);
-    fetchGameData({level:1,getKey: key}).then(
+    fetchGameData({level:level,getKey: key}).then(
       res=>{
         const data = JSON.parse(Base64.decode(res.msg.data))
         setGameData(data)
       }
     )
+    fetchTaskHistory().then(
+      res=>{
+        console.log(123,res);
+      }
+    );
   },[level]);
   
   useEffect(() => {
-    // const taskHistory = fetchTaskHistory();
     if(showPic && num>3){
       result[Math.trunc(num/2)-2] = resultObj
       setResultObj({});
       console.log(123,result);
     }
-    if(start && num <= 40){
+    if(num===42){
+      // console.log(121,result);
+      const val = JSON.stringify({
+        "data": result,
+        "duration": 55000,
+        "level": level,
+        "verification": "PUSH_MIX_256"
+      });
+      console.log(val);
+      fetchGamePush({
+        level: level,
+        data: result,
+        duration: 55000,
+        pushKey: md5(val)
+      }).then(
+        res=>{
+          setRate(res.data)
+        }
+      )
+    }
+    if(start && num <= 43){
       const tick = () => {
         saveCallBack.current();
         setShowPic(!showPic)
@@ -80,6 +105,7 @@ export default function Home(){
 
   const nextLevel = val =>{
     val && setLevel(level+1);
+    console.log(123,val);
     setNum(0);
   }
   const menu = (
@@ -172,9 +198,9 @@ export default function Home(){
           height: '100%',
         }}
       >
-        {/* {showPic && <PhoTable data={gameData[Math.trunc(num/2)]} />}
-        {!showPic && num>2 && <Selector selectRes={selectRes} />} */}
-        {showPic && <NextBtn nextLevel={nextLevel} />}
+        {showPic && num<=42 && <PhoTable data={gameData[Math.trunc(num/2)]} />}
+        {!showPic && num>2 && <Selector selectRes={selectRes} />}
+        { num>42 && <NextBtn rate={rate} nextLevel={nextLevel} />}
         <div className='button'>
           <button
             className={style.button}

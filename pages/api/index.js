@@ -14,7 +14,7 @@ async function fetchTaskHistory() {
 
 async function fetchGamePush(params) {
   return superagent
-    .post(`/api/game/data`)
+    .post(`/api/game/push`)
     .send(params)
     .set(headers)
     .then(res => res.body);
