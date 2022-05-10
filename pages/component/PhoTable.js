@@ -46,12 +46,12 @@ export default function PhoTable({ data }) {
                     box-sizing: border-box;
                     height: 100px;
                     width: 100px;
-                    // margin-left: -4px;
-                    // margin-top: -4px;
+                    margin-left: -4px;
+                    margin-top: -4px;
                     line-height: 100px;
                     text-align: center;
                     list-style: none;
-                    border: 4px solid #ccc;
+                    border: 4px solid #cce3f9;
                 }
             `}</style>
             <ul ref={lazyRoot} className="flex">

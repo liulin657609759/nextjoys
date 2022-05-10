@@ -5,7 +5,6 @@ import style from './css/Selector.module.css'
 
 
 export default function PhoTable({ selectRes }) {
-    
     const tyle = {
         background: 'red'
     }

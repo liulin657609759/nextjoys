@@ -31,5 +31,16 @@
   }
   .text{
     font-size: 30px;
-    margin-bottom: 20px;
-}
+    margin-bottom: 10px;
+  }
+  .right{
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: rgb(47, 236, 208);
+
+  }
+  .error{
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: red;
+  }

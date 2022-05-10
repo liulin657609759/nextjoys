@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { login, register } from '../../lib/auth'
 import Link from 'next/link'
 import { getUser } from '../../lib/user' // 登录
-import { Form, Input, Button, Checkbox, Radio, InputNumber } from 'antd';
+import { Form, Input, Button, message, Radio, InputNumber } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 export default function Layout({ children }) {
@@ -18,20 +18,22 @@ export default function Layout({ children }) {
       const reg={}
       if(isLogin){
         reg = await login(values.name, values.pwd)
+        if (reg.msg?.token) {
+            // 拿到token 获取用户信息
+            const user = await getUser()
+            user = JSON.parse(user);
+            if (user) setUser(user)
+            router.push('/')
+          } else {
+            message.warning(reg.msg)
+          }
       }else{
         reg = await register(values);
-      }
-      
-          // 获取到token
-      if (reg.msg.token) {
-        // 拿到token 获取用户信息
-        const user = await getUser()
-        user = JSON.parse(user);
-        if (user) setUser(user)
-        router.push('/')
-      } else {
-        message.warning(reg.msg)
-        console.log(reg);
+        if (reg.success) {
+            setIsLogin(!isLogin)
+          } else {
+            message.warning(reg.msg)
+          }
       }
     }
   
@@ -87,27 +89,23 @@ export default function Layout({ children }) {
                     required: true,
                     message: '请选择性别!',
                 },
-                ]}
+            ]}
         >
             <Radio.Group>
             <Radio value="0">男</Radio>
             <Radio value="1">女</Radio>
             </Radio.Group>
         </Form.Item>}
-        {!isLogin && <Form.Item>
-            <Form.Item
+        {!isLogin && <Form.Item
                 name="age"
-                noStyle
                 rules={[
                     {
                         required: true,
                         message: '请填写年龄！!',
                     },
-                    ]}
+                ]}
             >
-            <InputNumber min={1} max={100} />
-            </Form.Item>
-            <span className="ant-form-text"> 岁</span>
+            <InputNumber placeholder="age" min={18} max={35} />
         </Form.Item>}
         <Form.Item>
             <Button style={{width: '100%'}} type="primary" htmlType="submit" className="login-form-button">

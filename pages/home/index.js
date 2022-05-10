@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react'
 import { Layout, Dropdown, Space, Statistic, Badge, Menu, Popover, Button } from 'antd';
 const { Header, Content, Footer } = Layout;
-import { SmileTwoTone, DownOutlined } from '@ant-design/icons';
+import { RocketTwoTone, DownOutlined } from '@ant-design/icons';
 import md5 from 'js-md5';
 import Image from 'next/image';
 import { Base64 } from 'js-base64';
@@ -12,7 +12,7 @@ import Selector from '../component/Selector';
 import NextBtn from '../component/NextBtn';
 import style from './index.module.css';
 import { logout } from '../../lib/auth';
-import { fetchTaskHistory, fetchGameData, fetchGamePush } from '../api/index';
+import { fetchTaskHistory, fetchGameData, fetchGamePush, fetchTaskLast } from '../api/index';
 export default function Home(){
   const { user, isLoggedIn, setUser } = useContext(MyContext)
   const [start, setStart] = useState(false);
@@ -23,7 +23,10 @@ export default function Home(){
   const [level, setLevel] = useState(1)
   const [resultObj, setResultObj] = useState({})
   const [gameData, setGameData] = useState([])
+  const [historyData, setHistoryData] = useState([])
   const [rate, setRate] = useState('')
+  const [startDate, setStartDate] = useState(0)
+  const [endDate, setEndDate] = useState(0)
   const saveCallBack = useRef();
   const router = useRouter()
   const callBack = () => {
@@ -40,51 +43,57 @@ export default function Home(){
     return () => {};
   });
   useEffect(() => {
-    const val = JSON.stringify({
-      "level": level,
-      "verification": "GET_MIX_256"
-    });
-    const key = md5(val);
-    fetchGameData({level:level,getKey: key}).then(
+    fetchTaskLast().then(
       res=>{
-        const data = JSON.parse(Base64.decode(res.msg.data))
-        setGameData(data)
+        if(res.success){
+          setLevel(res.msg.level)
+          const val = JSON.stringify({
+            "level": res.msg.level,
+            "verification": "GET_MIX_256"
+          });
+          const key = md5(val);
+          fetchGameData({level:res.msg.level, getKey: key}).then(
+            res=>{
+              const data = JSON.parse(Base64.decode(res.msg.data))
+              setStartDate(new Date().getTime())
+              setGameData(data)
+            }
+          )
+          fetchTaskHistory().then(
+            res=>{
+              setHistoryData(res.msg)
+            }
+          );
+        }
       }
     )
-    fetchTaskHistory().then(
-      res=>{
-        console.log(123,res);
-      }
-    );
   },[level]);
   
   useEffect(() => {
-    if(showPic && num>3){
-      result[Math.trunc(num/2)-2] = resultObj
+    if(showPic && num>1+(level-1)*2){
+      result[Math.trunc(num/2)-2-(level-1)] = resultObj
       setResultObj({});
-      console.log(123,result);
     }
-    if(num===42){
-      // console.log(121,result);
+    if(num===42+(level-1)*2){
+      setEndDate(new Date().getTime())
       const val = JSON.stringify({
         "data": result,
-        "duration": 55000,
+        "duration": new Date().getTime()-startDate,
         "level": level,
         "verification": "PUSH_MIX_256"
       });
-      console.log(val);
       fetchGamePush({
-        level: level,
         data: result,
-        duration: 55000,
+        level: level,
+        duration: new Date().getTime()-startDate,
         pushKey: md5(val)
       }).then(
         res=>{
-          setRate(res.data)
+          setRate(res.msg.rate)
         }
       )
     }
-    if(start && num <= 43){
+    if(start && num <= 41+(level-1)*2){
       const tick = () => {
         saveCallBack.current();
         setShowPic(!showPic)
@@ -103,9 +112,8 @@ export default function Home(){
     resultObj[type] = val
   }
 
-  const nextLevel = val =>{
-    val && setLevel(level+1);
-    console.log(123,val);
+  const nextLevel = () =>{
+    setLevel(1);
     setNum(0);
   }
   const menu = (
@@ -124,25 +132,39 @@ export default function Home(){
     </Menu>
   );
   const content = (
-    <div>
-      <Badge status="success" text="Success" />
-      <br />
-      <Badge status="error" text="Error" />
-      <br />
-      <Badge status="default" text="Default" />
-      <br />
+    <div
+      style={{
+        maxHeight: '140px',
+        overflow: 'scroll'
+      }}
+    >
+      {
+        historyData.map(({taskTime,number},index)=>(
+          <div 
+            key={index}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '5px'
+            }}
+          >
+            <Badge
+              className="site-badge-count-109"
+              count={number}
+              style={{ 
+                margin: '4px',
+                backgroundColor: number >= 20 ? '#52c41a' : ''
+              }}
+            />
+            <span className={style.date}>{taskTime} </span>
+          </div>
+        ))
+      }
     </div>
   );
   return(
   <Layout style={{height: '100vh'}}>
     <style jsx>{`
-        .logo {
-            float: left;
-            width: 120px;
-            height: 31px;
-            margin: 16px 24px 16px 0;
-            background: #1890ff;
-        }
         .site-layout-background {
             background: #fff;
         }
@@ -151,6 +173,10 @@ export default function Home(){
           display: ${!start ? 'flex' : 'none'};
           padding: 20px;
           justify-content: center;
+        }
+        .suffix{
+          font-size: 18px;
+          color: #4aa3f8;
         }
     `}</style>
     <Header
@@ -163,15 +189,25 @@ export default function Home(){
       }}
     >
       <div className={style.headerContent}>
-        <div className='logo' />
+        <div className={style.logo}>
+          N-Block
+        </div>
         <Statistic
           title="进度"
-          value={Math.trunc(num/2)} 
-          suffix="/ 20"
+          value={
+            ` ${Math.trunc((num+1-level*2)/2) > 0 ?  Math.trunc((num+1-level*2)/2) : 0} /20`
+          } 
+          suffix= {
+            <span className='suffix'>
+              {
+              ` ^ ${level}`
+              }
+            </span>
+          }
           style={{
             textAlign: 'center'
           }}
-          prefix={<SmileTwoTone />}
+          prefix={<RocketTwoTone/>}
         />
         <Dropdown overlay={menu}>
           <a onClick={e => e.preventDefault()}>
@@ -187,8 +223,7 @@ export default function Home(){
     <Content
       className="site-layout"
       style={{
-        padding: '0 30px',
-        marginTop: 84,
+        marginTop: 74,
       }}
     >
       <div
@@ -198,13 +233,14 @@ export default function Home(){
           height: '100%',
         }}
       >
-        {showPic && num<=42 && <PhoTable data={gameData[Math.trunc(num/2)]} />}
-        {!showPic && num>2 && <Selector selectRes={selectRes} />}
-        { num>42 && <NextBtn rate={rate} nextLevel={nextLevel} />}
+        {showPic && num<=40+(level-1)*2 && <PhoTable data={gameData[Math.trunc(num/2)]} />}
+        {!showPic && num>2*level && <Selector selectRes={selectRes} />}
+        { num>40+(level-1)*2 && <NextBtn rate={rate} nextLevel={nextLevel} />}
         <div className='button'>
           <button
             className={style.button}
             onClick={()=>{
+              setStartDate(new Date().getTime())
               setStart(true)
             }}
           >开始！</button>
@@ -216,10 +252,10 @@ export default function Home(){
         textAlign: 'center',
       }}
     >
-      记忆测试 ©2018 Created by Ant UED
+      记忆测试 ©2022
     </Footer>
     <div className={style.fixed}>
-    <Popover placement="topRight" content={content} title="Title">
+    <Popover placement="topRight" content={content} title="历史记录">
       <div>
         <Image
           alt='ll'

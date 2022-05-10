@@ -1,14 +1,8 @@
 import React, {useState} from 'react'
-import { Button } from 'antd';
-import { CheckOutlined } from '@ant-design/icons';
 import style from './css/NextBtn.module.css'
 
 
 export default function PhoTable({ rate, nextLevel }) {
-    const btnStyle = {
-        width: '70px',
-        height: '70px',
-    }
     return (
         <div style={{
             display: 'flex',
@@ -17,12 +11,17 @@ export default function PhoTable({ rate, nextLevel }) {
             paddingTop: '25%',
             height: '100%'
         }}>
-            <div className={style.text}>您这一关的正确率为：{rate}</div>
+            <div className={style.text}>您这一关的正确率为：{rate}%</div>
+            {
+                rate>80 ?
+                <div className={style.right}>恭喜您完成</div> :
+                <div className={style.error}>很遗憾您没能完成这一关！</div>
+            }
             <div>
                 <button
                     className={style.button}
-                    onClick={()=>nextLevel(true)}
-                >3D Button 1</button>
+                    onClick={()=>nextLevel()}
+                >{rate>80 ? '点击进入下一关' : '再来一次'}</button>
             </div>
         </div>
 
