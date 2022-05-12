@@ -114,6 +114,7 @@ export default function Home(){
 
   const nextLevel = () =>{
     setLevel(1);
+    setStart(false)
     setNum(0);
   }
   const menu = (
@@ -190,7 +191,7 @@ export default function Home(){
     >
       <div className={style.headerContent}>
         <div className={style.logo}>
-          N-Block
+        N-back
         </div>
         <Statistic
           title="进度"
