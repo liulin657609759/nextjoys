@@ -18,7 +18,7 @@ export default function PhoTable({ data }) {
                     );
                 case data.pos :
                     return (
-                        <Image lazyRoot={lazyRoot} width="100" height="100" src={`/images/imgs/${data.imageUrl}`}  />
+                        <Image priority={true} lazyRoot={lazyRoot} width="100" height="100" src={`/images/imgs/${data.imageUrl}`}  />
                     );
                 default: 
                     return null
