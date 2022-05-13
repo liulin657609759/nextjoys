@@ -36,12 +36,6 @@ export default function Home(){
     setNum(num + 1);
   };
   useEffect(() => {
-    for(let i=0; i<20; i++){
-      fetchBmpImg(i);
-      fetchJpgImg(i)
-    }
-    setSpinning(false)
-    setIsModalVisible(true)
     if (!isLoggedIn) {
       router.push('/')
     }
@@ -64,10 +58,17 @@ export default function Home(){
           fetchGameData({level:res.msg.level, getKey: key}).then(
             res=>{
               const data = JSON.parse(Base64.decode(res.msg.data))
+              for(let i=0; i<20; i++){
+                fetchBmpImg(i);
+                fetchJpgImg(i)
+              }
               setStartDate(new Date().getTime())
               setGameData(data)
             }
-          )
+          ).then(()=>{
+              setSpinning(false)
+              setIsModalVisible(true)
+          })
           fetchTaskHistory().then(
             res=>{
               setHistoryData(res.msg)
