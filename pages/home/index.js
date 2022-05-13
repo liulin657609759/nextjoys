@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react'
-import { Layout, Dropdown, Space, Statistic, Badge, Menu, Popover, Button } from 'antd';
+import { Layout, Dropdown, Space, Statistic, Badge, Menu, Popover, Spin, Modal } from 'antd';
 const { Header, Content, Footer } = Layout;
 import { RocketTwoTone, DownOutlined } from '@ant-design/icons';
 import md5 from 'js-md5';
@@ -12,11 +12,12 @@ import Selector from '../component/Selector';
 import NextBtn from '../component/NextBtn';
 import style from './index.module.css';
 import { logout } from '../../lib/auth';
-import { fetchTaskHistory, fetchGameData, fetchGamePush, fetchTaskLast } from '../api/index';
+import { fetchTaskHistory, fetchGameData, fetchGamePush, fetchTaskLast, fetchBmpImg, fetchJpgImg } from '../api/index';
 export default function Home(){
   const { user, isLoggedIn, setUser } = useContext(MyContext)
   const [start, setStart] = useState(false);
   const [showPic, setShowPic] = useState(true);
+  const [modelText, setModelText] = useState('0');
   const [num, setNum] = useState(0);
   const [result, setResult] = useState([]);
   const [timers, setTimers] = useState([]);
@@ -27,12 +28,20 @@ export default function Home(){
   const [rate, setRate] = useState('')
   const [startDate, setStartDate] = useState(0)
   const [endDate, setEndDate] = useState(0)
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [spinning,setSpinning] = useState(true)
   const saveCallBack = useRef();
   const router = useRouter()
   const callBack = () => {
     setNum(num + 1);
   };
   useEffect(() => {
+    for(let i=0; i<20; i++){
+      fetchBmpImg(i);
+      fetchJpgImg(i)
+    }
+    setSpinning(false)
+    setIsModalVisible(true)
     if (!isLoggedIn) {
       router.push('/')
     }
@@ -116,7 +125,15 @@ export default function Home(){
     setLevel(1);
     setStart(false)
     setNum(0);
+    if(rate>80){
+      setModelText('1')
+      setIsModalVisible(true)
+    }
   }
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   const menu = (
     <Menu>
       <Menu.Item
@@ -163,113 +180,135 @@ export default function Home(){
       }
     </div>
   );
+  
   return(
-  <Layout style={{height: '100vh'}}>
-    <style jsx>{`
-        .site-layout-background {
-            background: #fff;
-        }
-        .button {
-          width: 100%;
-          display: ${!start ? 'flex' : 'none'};
-          padding: 20px;
-          justify-content: center;
-        }
-        .suffix{
-          font-size: 18px;
-          color: #4aa3f8;
-        }
-    `}</style>
-    <Header
-      style={{
-        position: 'fixed',
-        zIndex: 1,
-        width: '100%',
-        padding: '0 30px',
-        background: '#fff'
-      }}
-    >
-      <div className={style.headerContent}>
-        <div className={style.logo}>
-        N-back
-        </div>
-        <Statistic
-          title="进度"
-          value={
-            ` ${Math.trunc((num+1-level*2)/2) > 0 ?  Math.trunc((num+1-level*2)/2) : 0} /20`
-          } 
-          suffix= {
-            <span className='suffix'>
-              {
-              ` ^ ${level}`
-              }
-            </span>
+    <Spin tip="Loading..." spinning={spinning}>
+    <Layout style={{height: '100vh'}}>
+      <style jsx>{`
+          .site-layout-background {
+              background: #fff;
           }
-          style={{
-            textAlign: 'center'
-          }}
-          prefix={<RocketTwoTone/>}
-        />
-        <Dropdown overlay={menu}>
-          <a onClick={e => e.preventDefault()}>
-            <Space>
-              {user?.name}
-              <DownOutlined />
-            </Space>
-          </a>
-        </Dropdown>
-      </div>
-      
-    </Header>
-    <Content
-      className="site-layout"
-      style={{
-        marginTop: 74,
-      }}
-    >
-      <div
-        className="site-layout-background"
+          .button {
+            width: 100%;
+            display: ${!start ? 'flex' : 'none'};
+            padding: 20px;
+            justify-content: center;
+          }
+          .suffix{
+            font-size: 18px;
+            color: #4aa3f8;
+          }
+      `}</style>
+      <Header
         style={{
-          padding: 24,
-          height: '100%',
+          position: 'fixed',
+          zIndex: 1,
+          width: '100%',
+          padding: '0 30px',
+          background: '#fff'
         }}
       >
-        {showPic && num<=40+(level-1)*2 && <PhoTable data={gameData[Math.trunc(num/2)]} />}
-        {!showPic && num>2*level && <Selector selectRes={selectRes} />}
-        { num>40+(level-1)*2 && <NextBtn rate={rate} nextLevel={nextLevel} />}
-        <div className='button'>
-          <button
-            className={style.button}
-            onClick={()=>{
-              setStartDate(new Date().getTime())
-              setStart(true)
+        <div className={style.headerContent}>
+          <div className={style.logo}>
+          N-back
+          </div>
+          <Statistic
+            title="进度"
+            value={
+              ` ${Math.trunc((num+1-level*2)/2) > 0 ?  Math.trunc((num+1-level*2)/2) : 0} /20`
+            } 
+            suffix= {
+              <span className='suffix'>
+                {
+                ` ^ ${level}`
+                }
+              </span>
+            }
+            style={{
+              textAlign: 'center'
             }}
-          >开始！</button>
+            prefix={<RocketTwoTone/>}
+          />
+          <Dropdown overlay={menu}>
+            <a onClick={e => e.preventDefault()}>
+              <Space>
+                {user?.name}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
         </div>
-      </div>
-    </Content>
-    <Footer
-      style={{
-        textAlign: 'center',
-      }}
-    >
-      记忆测试 ©2022
-    </Footer>
-    <div className={style.fixed}>
-    <Popover placement="topRight" content={content} title="历史记录">
-      <div>
-        <Image
-          alt='ll'
-          width={50}
-          height={50}
-          src={'/images/hover.png'}
+        
+      </Header>
+      <Content
+        className="site-layout"
+        style={{
+          marginTop: 74,
+        }}
+      >
+        <div
+          className="site-layout-background"
           style={{
-            opacity: '.7'
+            padding: 24,
+            height: '100%',
           }}
-        />
+        >
+          {showPic && num<=40+(level-1)*2 && <PhoTable data={gameData[Math.trunc(num/2)]} />}
+          {!showPic && num>2*level && <Selector selectRes={selectRes} />}
+          { num>40+(level-1)*2 && <NextBtn rate={rate} nextLevel={nextLevel} />}
+          <div className='button'>
+            <button
+              className={style.button}
+              onClick={()=>{
+                setStartDate(new Date().getTime())
+                setStart(true)
+              }}
+            >开始！</button>
+          </div>
         </div>
-    </Popover>
-    </div>
-  </Layout>
+      </Content>
+      <Footer
+        style={{
+          textAlign: 'center',
+          fontWeight: 500
+        }}
+      >
+        记忆测试 ©2022
+      </Footer>
+      <div className={style.fixed}>
+      <Popover placement="topRight" content={content} title="历史记录">
+        <div>
+          <Image
+            alt='ll'
+            width={50}
+            height={50}
+            src={'/images/hover.png'}
+            style={{
+              opacity: '.7'
+            }}
+          />
+          </div>
+      </Popover>
+      </div>
+      <Modal title={modelText === '0' ? "请认真阅读程序规则！" : '您已进入下一个等级'} visible={isModalVisible} footer={null} onCancel={handleCancel}>
+        {
+          modelText === '0'? (
+            <div>
+              <p>1、接下来会不断呈现闪烁的图片和中心的文字，您需要判断当前呈现的图片位置和中心呈现的文字是否与前n个一致。</p>
+              <p>2、在n=1时，需判断当前呈现图片位置和前1个图片位置是否一致，以及中心文字颜色和前1个是否一致。</p>
+              <p>3、位置一致按F键，颜色一致按J键，请尽量做的又快又好。</p>
+            </div>
+          ) :
+          (
+            <div>
+              <p>1、您需要判断当前呈现的图片位置和中心呈现的文字是否与前n个一致。</p>
+              <p>2、位置一致按F键，颜色一致按J键。</p>
+            </div>
+          )
+        }
+        
+      </Modal>
+    </Layout>
+    </Spin>
 );
 }

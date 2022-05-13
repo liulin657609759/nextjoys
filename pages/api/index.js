@@ -3,6 +3,7 @@ import Cookie from 'js-cookie'
 
 const headers = {
   'Authorization': Cookie.get('jwt'),
+  'Access-Control-Allow-Origin': '*'
 };
 
 async function fetchTaskHistory() {
@@ -36,6 +37,18 @@ async function fetchGameData(params) {
     .query(params)
     .then(res => res.body);
 }
+async function fetchBmpImg(num) {
+  return superagent
+    .get(`/imgs/neutral/NEUTRAL_${num}.bmp`)
+    .set(headers)
+    .then(res => res.body);
+}
+async function fetchJpgImg(num) {
+  return superagent
+    .get(`/imgs/negative/NEGATIVE_${num}.JPG`)
+    .set(headers)
+    .then(res => res.body);
+}
 
 
 
@@ -44,5 +57,7 @@ export {
   fetchTaskHistory,
   fetchTaskLast,
   fetchGameData,
-  fetchGamePush
+  fetchGamePush,
+  fetchBmpImg,
+  fetchJpgImg
 }
