@@ -8,7 +8,7 @@ export default function PhoTable({ rate, nextLevel }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            paddingTop: '25%',
+            paddingTop: '150px',
             height: '100%'
         }}>
             <div className={style.text}>您这一关的正确率为：{rate}%</div>
