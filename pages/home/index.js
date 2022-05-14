@@ -56,11 +56,11 @@ export default function Home(){
           });
           const key = md5(val);
           fetchGameData({level:res.msg.level, getKey: key}).then(
-            res=>{
+            async res=>{
               const data = JSON.parse(Base64.decode(res.msg.data))
               for(let i=0; i<20; i++){
-                fetchBmpImg(i);
-                fetchJpgImg(i)
+                await fetchBmpImg(i);
+                await fetchJpgImg(i)
               }
               setStartDate(new Date().getTime())
               setGameData(data)
