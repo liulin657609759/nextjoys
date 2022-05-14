@@ -37,13 +37,13 @@ async function fetchGameData(params) {
     .query(params)
     .then(res => res.body);
 }
-async function fetchBmpImg(num) {
+function fetchBmpImg(num) {
   return superagent
     .get(`/imgs/neutral/NEUTRAL_${num}.bmp`)
     .set(headers)
     .then(res => res.body);
 }
-async function fetchJpgImg(num) {
+function fetchJpgImg(num) {
   return superagent
     .get(`/imgs/negative/NEGATIVE_${num}.JPG`)
     .set(headers)

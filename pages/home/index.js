@@ -108,7 +108,7 @@ export default function Home(){
         saveCallBack.current();
         setShowPic(!showPic)
       };
-      const timer = setInterval(tick, !showPic ? 2000 : 500);
+      const timer = setInterval(tick, !showPic ? 2000 : 1000);
       timers.push(timer);
       setTimers(timers);
       return () => {
