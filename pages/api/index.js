@@ -5,6 +5,11 @@ const headers = {
   'Authorization': Cookie.get('jwt'),
   'Access-Control-Allow-Origin': '*'
 };
+const headersImg = {
+  'Authorization': Cookie.get('jwt'),
+  'Access-Control-Allow-Origin': '*',
+  'Cache-Control': 'max-age=315360000'
+};
 
 async function fetchTaskHistory() {
   return superagent
@@ -40,13 +45,13 @@ async function fetchGameData(params) {
 async function fetchBmpImg(num) {
   return superagent
     .get(`/_next/image?url=http%3A%2F%2F124.223.223.225%3A80%2Fimgs%2Fneutral%2FNEUTRAL_${num}.bmp&w=256&q=75`)
-    .set(headers)
+    .set(headersImg)
     .then(res => res.body);
 }
 async function fetchJpgImg(num) {
   return superagent
     .get(`/_next/image?url=http%3A%2F%2F124.223.223.225%3A80%2Fimgs%2Fnegative%2FNEGATIVE_${num}.JPG&w=256&q=75`)
-    .set(headers)
+    .set(headersImg)
     .then(res => res.body);
 }
 

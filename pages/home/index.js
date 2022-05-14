@@ -202,11 +202,11 @@ export default function Home(){
       `}</style>
       <Header
         style={{
-          position: 'fixed',
           zIndex: 1,
           width: '100%',
           padding: '0 30px',
-          background: '#fff'
+          background: '#fff',
+          height: 'auto'
         }}
       >
         <div className={style.headerContent}>
@@ -231,7 +231,10 @@ export default function Home(){
             prefix={<RocketTwoTone/>}
           />
           <Dropdown overlay={menu}>
-            <a onClick={e => e.preventDefault()}>
+            <a style={{
+              width: '120px',
+              textAlign: 'end'
+            }} onClick={e => e.preventDefault()}>
               <Space>
                 {user?.name}
                 <DownOutlined />
@@ -244,7 +247,7 @@ export default function Home(){
       <Content
         className="site-layout"
         style={{
-          marginTop: 74,
+          marginTop: 15,
         }}
       >
         <div
