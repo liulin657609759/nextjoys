@@ -3,7 +3,7 @@ import { Layout, Dropdown, Space, Statistic, Badge, Menu, Popover, Spin, Modal }
 const { Header, Content, Footer } = Layout;
 import { RocketTwoTone, DownOutlined } from '@ant-design/icons';
 import md5 from 'js-md5';
-import Image from 'next/image';
+import Images from 'next/image';
 import { Base64 } from 'js-base64';
 import { useRouter } from 'next/router';
 import MyContext from '../../lib/context';
@@ -58,9 +58,17 @@ export default function Home(){
           fetchGameData({level:res.msg.level, getKey: key}).then(
             async res=>{
               const data = JSON.parse(Base64.decode(res.msg.data))
+              var img = new Image();
               for(let i=0; i<20; i++){
-                await fetchBmpImg(i);
-                await fetchJpgImg(i)
+                img.src = `http://124.223.223.225/imgs/negative/NEGATIVE_${i}.JPG`;
+                // await fetchBmpImg(i);
+                // await fetchJpgImg(i)
+              }
+              var img1 = new Image();
+              for(let i=0; i<=20; i++){
+                img1.src = `http://124.223.223.225:80/imgs/neutral/NEUTRAL_${i}.bmp`;
+                // await fetchBmpImg(i);
+                // await fetchJpgImg(i)
               }
               setStartDate(new Date().getTime())
               setGameData(data)
@@ -282,7 +290,7 @@ export default function Home(){
       <div className={style.fixed}>
       <Popover placement="topRight" content={content} title="历史记录">
         <div>
-          <Image
+          <Images
             alt='ll'
             width={50}
             height={50}
