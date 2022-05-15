@@ -58,15 +58,18 @@ export default function Home(){
           fetchGameData({level:res.msg.level, getKey: key}).then(
             async res=>{
               const data = JSON.parse(Base64.decode(res.msg.data))
-              var img = new Image();
               for(let i=0; i<20; i++){
+                var img = new Image();
                 img.src = `http://124.223.223.225/imgs/negative/NEGATIVE_${i}.JPG`;
+                img.onload = () => console.log("Image loaded.")
                 // await fetchBmpImg(i);
                 // await fetchJpgImg(i)
               }
-              var img1 = new Image();
+              // var img1 = new Image();
               for(let i=0; i<=20; i++){
+                var img1 = new Image();
                 img1.src = `http://124.223.223.225:80/imgs/neutral/NEUTRAL_${i}.bmp`;
+                img1.onload = () => console.log("Image loaded.")
                 // await fetchBmpImg(i);
                 // await fetchJpgImg(i)
               }
