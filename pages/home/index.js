@@ -141,7 +141,7 @@ export default function Home(){
     setLevel(1);
     setStart(false)
     setNum(0);
-    setTimers(times+1)
+    setTimes(times+1)
     if(rate>80){
       setModelText('1')
       setIsModalVisible(true)
