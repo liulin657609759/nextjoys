@@ -66,7 +66,7 @@ export default function Home(){
               var img1 = new Image();
               for(let i=0; i<=20; i++){
                 var img1 = new Image();
-                img1.src = `http://124.223.223.225:80/imgs/neutral/NEUTRAL_${i}.bmp`;
+                img1.src = `http://124.223.223.225/imgs/neutral/NEUTRAL_${i}.bmp`;
                 await callFunction(img1)
               }
               setStartDate(new Date().getTime())
@@ -93,16 +93,17 @@ export default function Home(){
     }
     if(num===42+(level-1)*2){
       setEndDate(new Date().getTime())
+      const duration = new Date().getTime()-startDate;
       const val = JSON.stringify({
         "data": result,
-        "duration": new Date().getTime()-startDate,
+        "duration": duration,
         "level": level,
         "verification": "PUSH_MIX_256"
       });
       fetchGamePush({
         data: result,
         level: level,
-        duration: new Date().getTime()-startDate,
+        duration: duration,
         pushKey: md5(val)
       }).then(
         res=>{

@@ -16,7 +16,7 @@ export default function PhoTable({ data }) {
                     );
                 case data.pos :
                     return (
-                        <img style={{verticalAlign: 'baseline'}} alt="Picture" lazyRoot={lazyRoot} width="92" height="92" src={data.imageUrl}  />
+                        <img style={{verticalAlign: 'baseline'}} alt="Picture" width="92" height="92" src={data.imageUrl}  />
                     );
                 default: 
                     return null
