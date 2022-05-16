@@ -27,9 +27,9 @@ export default function Home(){
   const [historyData, setHistoryData] = useState([])
   const [rate, setRate] = useState('')
   const [startDate, setStartDate] = useState(0)
-  const [endDate, setEndDate] = useState(0)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [spinning,setSpinning] = useState(true)
+  const [times,setTimes] = useState(0)
   const saveCallBack = useRef();
   const router = useRouter()
   const callBack = () => {
@@ -84,7 +84,7 @@ export default function Home(){
         }
       }
     )
-  },[level]);
+  },[level,times]);
   
   useEffect(() => {
     if(showPic && num>1+(level-1)*2){
@@ -92,7 +92,6 @@ export default function Home(){
       setResultObj({});
     }
     if(num===42+(level-1)*2){
-      setEndDate(new Date().getTime())
       const duration = new Date().getTime()-startDate;
       const val = JSON.stringify({
         "data": result,
@@ -142,6 +141,7 @@ export default function Home(){
     setLevel(1);
     setStart(false)
     setNum(0);
+    setTimers(times+1)
     if(rate>80){
       setModelText('1')
       setIsModalVisible(true)
