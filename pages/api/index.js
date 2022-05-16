@@ -44,13 +44,13 @@ async function fetchGameData(params) {
 }
 async function fetchBmpImg(num) {
   return superagent
-    .get(`/_next/image?url=http%3A%2F%2F124.223.223.225%3A80%2Fimgs%2Fneutral%2FNEUTRAL_${num}.bmp&w=256&q=75`)
+    .get(`/imgs/neutral/NEUTRAL_${num}.bmp`)
     .set(headersImg)
     .then(res => res.body);
 }
 async function fetchJpgImg(num) {
   return superagent
-    .get(`/_next/image?url=http%3A%2F%2F124.223.223.225%3A80%2Fimgs%2Fnegative%2FNEGATIVE_${num}.JPG&w=256&q=75`)
+    .get(`/imgs/negative/NEGATIVE_${num}.JPG`)
     .set(headersImg)
     .then(res => res.body);
 }

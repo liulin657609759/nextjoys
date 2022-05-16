@@ -1,6 +1,4 @@
 import React, {useState} from 'react'
-import Image from 'next/image';
-import { Form, Input, Button, Checkbox } from 'antd';
 
 export default function PhoTable({ data }) {
     const lazyRoot = React.useRef(null)
@@ -18,7 +16,7 @@ export default function PhoTable({ data }) {
                     );
                 case data.pos :
                     return (
-                        <Image alt="Picture" lazyRoot={lazyRoot} width="100" height="100" src={data.imageUrl}  />
+                        <img style={{verticalAlign: 'baseline'}} alt="Picture" lazyRoot={lazyRoot} width="92" height="92" src={data.imageUrl}  />
                     );
                 default: 
                     return null
@@ -52,6 +50,9 @@ export default function PhoTable({ data }) {
                     text-align: center;
                     list-style: none;
                     border: 4px solid #cce3f9;
+                }
+                .flex > li >img{
+                    vertical-align: baseline;
                 }
             `}</style>
             <ul ref={lazyRoot} className="flex">

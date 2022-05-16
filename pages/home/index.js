@@ -61,17 +61,13 @@ export default function Home(){
               for(let i=0; i<20; i++){
                 var img = new Image();
                 img.src = `http://124.223.223.225/imgs/negative/NEGATIVE_${i}.JPG`;
-                img.onload = () => console.log("Image loaded.")
-                // await fetchBmpImg(i);
-                // await fetchJpgImg(i)
+                await callFunction(img)
               }
-              // var img1 = new Image();
+              var img1 = new Image();
               for(let i=0; i<=20; i++){
                 var img1 = new Image();
                 img1.src = `http://124.223.223.225:80/imgs/neutral/NEUTRAL_${i}.bmp`;
-                img1.onload = () => console.log("Image loaded.")
-                // await fetchBmpImg(i);
-                // await fetchJpgImg(i)
+                await callFunction(img1)
               }
               setStartDate(new Date().getTime())
               setGameData(data)
@@ -128,6 +124,14 @@ export default function Home(){
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [num,start,isLoggedIn]);
+
+  function callFunction(img) {
+    return new Promise((resolve, reject) => {
+      img.onload = () => {
+          resolve(true)
+      }
+    })
+  }
 
   const selectRes = (type,val)=>{
     resultObj[type] = val
