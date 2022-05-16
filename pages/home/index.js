@@ -88,7 +88,11 @@ export default function Home(){
   
   useEffect(() => {
     if(showPic && num>1+(level-1)*2){
-      result[Math.trunc(num/2)-2-(level-1)] = resultObj
+      const obj = {};
+      Object.keys(resultObj).sort().map(key=>{
+        obj[key] = resultObj[key]
+      })
+      result[Math.trunc(num/2)-2-(level-1)] = obj
       setResultObj({});
     }
     if(num===42+(level-1)*2){
