@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
       <Head>
-        <title>React-Nextjs-Template</title>
+        <title>记忆测试</title>
         <meta charSet="utf-8" />
         <meta
           name="viewport"
