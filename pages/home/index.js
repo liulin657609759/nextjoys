@@ -74,7 +74,7 @@ export default function Home(){
             }
           ).then(()=>{
               setSpinning(false)
-              setIsModalVisible(true)
+              !times && setIsModalVisible(true)
           })
           fetchTaskHistory().then(
             res=>{
@@ -325,7 +325,7 @@ export default function Home(){
           ) :
           (
             <div>
-              <p>1、您需要判断当前呈现的图片位置和中心呈现的文字是否与前n个一致。</p>
+              <p>{`1、您需要判断当前呈现的图片位置和中心呈现的文字是否与前面第${level}个一致。`}</p>
               <p>2、位置一致按F键，颜色一致按J键。</p>
             </div>
           )

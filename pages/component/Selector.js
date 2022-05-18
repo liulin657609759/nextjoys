@@ -12,17 +12,17 @@ export default function Selector({ selectRes }) {
     }, [ref]);
     let fBtnStyle = {
         opacity: fIsUp ? '.4' : '1',
-        width: '70px',
-        height: '70px',
-        fontSize: '40px',
+        width: '100px',
+        height: '100px',
+        fontSize: '20px',
         fontWeight: '500',
         lineHeight: '55px'
     }
     let gBtnStyle = {
         opacity: gIsUp ? '.4' : '1',
-        width: '70px',
-        height: '70px',
-        fontSize: '40px',
+        width: '100px',
+        height: '100px',
+        fontSize: '20px',
         fontWeight: '500',
         lineHeight: '55px'
     }
@@ -30,7 +30,7 @@ export default function Selector({ selectRes }) {
         if(e.keyCode === 70){
             setFIsUp(true)
             selectRes('posJudge',true)
-        }else if(e.keyCode === 71){
+        }else if(e.keyCode === 74){
             setGFIsUp(true)
             selectRes('colorJudge',true)
         }
@@ -47,7 +47,7 @@ export default function Selector({ selectRes }) {
             height: '100%'
         }}>
             <div className={style.item}>
-                <p className={style.p}>图片的位置一样吗？</p>
+                {/* <p className={style.p}>图片的位置一样吗？</p> */}
                 <div className={style.selectItem}>
                     <Button
                         className='btn'
@@ -60,12 +60,12 @@ export default function Selector({ selectRes }) {
                         size={'large'}
                         onClick={()=>selectRes('posJudge',true)}
                     >
-                        F
+                        位置F
                     </Button>
                 </div>
             </div>
             <div className={style.item}>
-                <p className={style.p}>中间文字颜色一样吗？</p>
+                {/* <p className={style.p}>中间文字颜色一样吗？</p> */}
                 <div className={style.selectItem}>
                     <Button
                     style={gBtnStyle}
@@ -77,7 +77,7 @@ export default function Selector({ selectRes }) {
                     size='large'
                     onClick={()=>selectRes('colorJudge',true)}
                     >
-                        G
+                        颜色J
                     </Button>
                 </div>
             </div>
